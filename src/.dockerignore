@@ -1,0 +1,83 @@
+# .dockerignore para LogisticsAndDeliveries.WebApi
+
+# Build outputs
+**/bin/
+**/obj/
+
+# Visual Studio / IDE
+.vs/
+.vscode/
+.idea/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# NuGet
+packages/
+*.nupkg
+.nuget/
+
+# Test results
+TestResults/
+[Tt]est[Rr]esult*/
+*.trx
+*.coverage
+*.coveragexml
+
+# Logs, temp files
+*.log
+tmp/
+temp/
+*.tmp
+*.temp
+
+# Publish output
+**/publish/
+/app/publish
+
+# Secrets and environment files
+appsettings.*.json
+!appsettings.json
+!appsettings.Development.json
+secrets.json
+*.secrets.json
+.env
+.env.local
+.env.*.local
+
+# Database files
+*.mdf
+*.ldf
+*.db
+*.sqlite
+*.sqlite3
+
+# Node (if using frontend tools)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Docker files (opcional - solo si no quieres que se copien)
+Dockerfile*
+docker-compose*.yml
+.dockerignore
+
+# Git and version control
+.git/
+.gitignore
+.gitattributes
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# README and documentation (opcional)
+README*.md
+*.md
