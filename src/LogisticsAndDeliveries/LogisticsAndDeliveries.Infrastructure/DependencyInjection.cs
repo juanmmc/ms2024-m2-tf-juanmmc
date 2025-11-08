@@ -10,6 +10,7 @@ using LogisticsAndDeliveries.Infrastructure.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System.Reflection;
 
 namespace LogisticsAndDeliveries.Infrastructure
@@ -27,6 +28,31 @@ namespace LogisticsAndDeliveries.Infrastructure
             return services;
         }
 
+        /// <summary>
+        /// Aplica las migraciones pendientes de la base de datos
+        /// </summary>
+        public static async Task ApplyMigrationsAsync(this IServiceProvider services)
+        {
+            using var scope = services.CreateScope();
+            var serviceProvider = scope.ServiceProvider;
+            var logger = serviceProvider.GetRequiredService<ILoggerFactory>().CreateLogger("Migrations");
+
+            try
+            {
+                // Obtener el contexto de persistencia que contiene las migraciones
+                var context = serviceProvider.GetRequiredService<PersistenceDbContext>();
+
+                // Aplicar migraciones pendientes
+                await context.Database.MigrateAsync();
+
+                logger.LogInformation("Migraciones aplicadas exitosamente.");
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "Error al aplicar migraciones: {Message}", ex.Message);
+                throw;
+            }
+        }
 
         private static void AddPersistence(this IServiceCollection services, IConfiguration configuration)
         {

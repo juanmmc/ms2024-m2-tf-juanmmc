@@ -3,5 +3,17 @@ using MediatR;
 
 namespace LogisticsAndDeliveries.Application.Packages.CreatePackage
 {
-    public record CreatePackageCommand(Guid Id, string Number, Guid PatientId, string PatientName, string PatientPhone, string DeliveryAddress, double DeliveryLatitude, double DeliveryLongitude, DateOnly ScheduledDate, Guid DriverId) : IRequest<Result<Guid>>;
+    public record CreatePackageCommand : IRequest<Result<Guid>>
+    {
+        public Guid Id { get; init; }
+        public string Number { get; init; } = string.Empty;
+        public Guid PatientId { get; init; }
+        public string PatientName { get; init; } = string.Empty;
+        public string PatientPhone { get; init; } = string.Empty;
+        public string DeliveryAddress { get; init; } = string.Empty;
+        public double DeliveryLatitude { get; init; }
+        public double DeliveryLongitude { get; init; }
+        public DateOnly ScheduledDate { get; init; }
+        public Guid DriverId { get; init; }
+    }
 }

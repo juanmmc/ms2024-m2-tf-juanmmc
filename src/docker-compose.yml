@@ -1,0 +1,31 @@
+services:
+  api:
+    image: juanmurielc/logisticsanddeliveries_webapi:2.0.0
+    container_name: api_container
+    ports:
+      - 80:80
+    environment:
+      - ConnectionStrings__LogisticsAndDeliveriesDatabase=Server=db;Port=5432;Database=api_db;Username=api_user;Password=ApiPass123;Include Error Detail=true
+    volumes:
+      - api_data:/usr/src/app/data
+    depends_on:
+      db:
+        condition: service_healthy
+  db:
+    image: postgres:13.22
+    container_name: db_container
+    environment:
+      - POSTGRES_USER=api_user
+      - POSTGRES_PASSWORD=ApiPass123
+      - POSTGRES_DB=api_db
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U api_user -d api_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  api_data:
+  db_data:
