@@ -7,7 +7,7 @@ services:
     environment:
       - ConnectionStrings__LogisticsAndDeliveriesDatabase=Server=db;Port=5432;Database=api_db;Username=api_user;Password=ApiPass123;Include Error Detail=true
     volumes:
-      - api_data:/usr/src/app/data
+      - api_data:/app/data
     depends_on:
       db:
         condition: service_healthy
