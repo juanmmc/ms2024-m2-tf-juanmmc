@@ -24,6 +24,20 @@ Microservicio para gestionar operaciones de reparto (entregas) de paquetes alime
 ### Coordinación entre agregados
 - Emisión de eventos de dominio (ej. paquete creado) y handlers que realizan asignaciones en el agregado Delivery (desacoplamiento entre agregados).
 
+## Ejecución del entorno con Docker Compose
+
+Para levantar el entorno de trabajo completo:
+
+```bash
+docker compose --project-name logisticsanddeliveries_webapi up -d
+```
+
+Para detener el entorno:
+
+```bash
+docker compose --project-name logisticsanddeliveries_webapi down
+```
+
 # Diagrama de Clases
 
 ![Class diagram](./img/class_diagram.png)
