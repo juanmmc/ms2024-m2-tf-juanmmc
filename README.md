@@ -13,20 +13,15 @@ Microservicio para gestionar operaciones de reparto (entregas) de paquetes alime
 - Obtener repartidor.
 
 ### Gestión de paquetes (Package)
-- Crear paquete con información del paciente y dirección de entrega.
-
-### Gestión de repartidores (Delivery)
+- Crear paquete con información del paciente, dirección de entrega y repartidor asignado.
 - Cambiar estado: marcar en tránsito (si tiene orden asignado), entregado (con evidencia), fallido, cancelar.
 - Registrar incidentes de entrega (solo si el paquete está en estado Failed).
 - Registrar orden para planificación de entrega.
 - Listar entregas asignadas a un repartidor por fecha y ordenados según el orden definido.
 
-### Coordinación entre agregados
-- Emisión de eventos de dominio (ej. paquete creado) y handlers que realizan asignaciones en el agregado Delivery (desacoplamiento entre agregados).
-
 ## Ejecución del entorno con Docker Compose
 
-Para levantar el entorno de trabajo completo:
+Ubicarse en la carpeta src Para levantar el entorno de trabajo completo:
 
 ```bash
 docker compose --project-name logisticsanddeliveries_webapi up -d

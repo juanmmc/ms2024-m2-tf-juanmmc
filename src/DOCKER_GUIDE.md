@@ -143,18 +143,6 @@ docker-compose logs -f
 docker-compose restart api
 ```
 
----
-
-## Ventajas de esta Solución
-
-✅ **Variables de entorno seguras**: Las credenciales no están hardcodeadas en la imagen Docker  
-✅ **Migraciones automáticas**: No necesitas ejecutar comandos manuales  
-✅ **Healthcheck**: El API espera a que PostgreSQL esté listo  
-✅ **Logs claros**: Puedes ver si las migraciones funcionaron correctamente  
-✅ **Persistencia de datos**: Los volúmenes mantienen los datos de la base de datos  
-
----
-
 ## Cambios Adicionales Aplicados
 
 Durante la configuración, se realizaron los siguientes ajustes:
