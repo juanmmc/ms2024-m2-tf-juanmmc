@@ -11,6 +11,11 @@ namespace LogisticsAndDeliveries.Infrastructure.Persistence.PersistenceModel.EFC
         public Guid Id { get; set; }
 
         [Required]
+        [Column("driverId")]
+        public required Guid DriverId { get; set; }
+        public required DriverPersistenceModel Driver { get; set; }
+
+        [Required]
         [Column("number")]
         [MaxLength(100)]
         public required string Number { get; set; }
@@ -41,5 +46,29 @@ namespace LogisticsAndDeliveries.Infrastructure.Persistence.PersistenceModel.EFC
         [Required]
         [Column("deliveryLongitude", TypeName = "double precision")]
         public double DeliveryLongitude { get; set; }
+
+        [Required]
+        [Column("deliveryDate", TypeName = "date")]
+        public DateOnly DeliveryDate { get; set; }
+
+        [Required]
+        [Column("deliveryOrder", TypeName = "integer")]
+        public int DeliveryOrder { get; set; }
+
+        [Required]
+        [Column("deliveryStatus")]
+        public required string DeliveryStatus { get; set; }
+
+        [Column("deliveryEvidence")]
+        public string? DeliveryEvidence { get; set; }
+
+        [Column("incidentType")]
+        public string? IncidentType { get; set; }
+
+        [Column("incidentDescription")]
+        public string? IncidentDescription { get; set; }
+
+        [Column("updatedAt")]
+        public DateTime? UpdatedAt { get; set; }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using LogisticsAndDeliveries.Application;
 using LogisticsAndDeliveries.Core.Abstractions;
-using LogisticsAndDeliveries.Domain.Deliveries;
 using LogisticsAndDeliveries.Domain.Drivers;
 using LogisticsAndDeliveries.Domain.Packages;
 using LogisticsAndDeliveries.Infrastructure.Persistence;
@@ -64,7 +63,6 @@ namespace LogisticsAndDeliveries.Infrastructure
             // Repositories
             services.AddScoped<IPackageRepository, PackageRepository>();
             services.AddScoped<IDriverRepository, DriverRepository>();
-            services.AddScoped<IDeliveryRepository, DeliveryRepository>();
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
         }

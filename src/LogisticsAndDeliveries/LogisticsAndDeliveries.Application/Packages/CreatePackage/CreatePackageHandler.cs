@@ -19,7 +19,7 @@ namespace LogisticsAndDeliveries.Application.Packages.CreatePackage
         public async Task<Result<Guid>> Handle(CreatePackageCommand request, CancellationToken cancellationToken)
         {
             // Crear el agregado de dominio
-            var package = new Package(request.Id, request.Number, request.PatientId, request.PatientName, request.PatientPhone, request.DeliveryAddress, request.DeliveryLatitude, request.DeliveryLongitude, request.ScheduledDate, request.DriverId);
+            var package = new Package(request.Id, request.Number, request.PatientId, request.PatientName, request.PatientPhone, request.DeliveryAddress, request.DeliveryLatitude, request.DeliveryLongitude, request.DeliveryDate, request.DriverId);
 
             // Persistir el agregado
             await _packageRepository.AddAsync(package);

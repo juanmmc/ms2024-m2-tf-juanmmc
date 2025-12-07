@@ -1,12 +1,7 @@
 ﻿using LogisticsAndDeliveries.Core.Abstractions;
 using LogisticsAndDeliveries.Infrastructure.Persistence.DomainModel;
 using MediatR;
-using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LogisticsAndDeliveries.Infrastructure.Persistence
 {
@@ -23,37 +18,28 @@ namespace LogisticsAndDeliveries.Infrastructure.Persistence
 
         public async Task CommitAsync(CancellationToken cancellationToken = default)
         {
-            // Collect entries that have domain events
-            var entries = _dbContext.ChangeTracker
+            //Get domain events
+            var domainEvents = _dbContext.ChangeTracker
                 .Entries<Entity>()
                 .Where(x => x.Entity.DomainEvents.Any())
+                .Select(x =>
+                {
+                    var domainEvents = x.Entity.DomainEvents.ToImmutableArray();
+                    x.Entity.ClearDomainEvents();
+
+                    return domainEvents;
+                })
+                .SelectMany(domainEvents => domainEvents)
                 .ToList();
 
-            // Flatten domain events
-            var domainEvents = entries
-                .SelectMany(x => x.Entity.DomainEvents)
-                .ToImmutableArray();
-
-            // Persist current changes first to ensure referential integrity
-            await _dbContext.SaveChangesAsync(cancellationToken);
-
-            // Publish Domain Events after changes are saved
+            //Publish Domain Events
             foreach (var domainEvent in domainEvents)
             {
                 await _mediator.Publish(domainEvent, cancellationToken);
             }
 
-            // Clear domain events from original entities
-            foreach (var entry in entries)
-            {
-                entry.Entity.ClearDomainEvents();
-            }
 
-            // If event handlers created or modified entities, persist those changes as well
-            if (_dbContext.ChangeTracker.HasChanges())
-            {
-                await _dbContext.SaveChangesAsync(cancellationToken);
-            }
+            await _dbContext.SaveChangesAsync(cancellationToken);
         }
     }
 }

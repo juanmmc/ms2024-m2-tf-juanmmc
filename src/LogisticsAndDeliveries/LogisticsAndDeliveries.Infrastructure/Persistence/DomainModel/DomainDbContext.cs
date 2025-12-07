@@ -1,6 +1,5 @@
 ﻿using LogisticsAndDeliveries.Domain.Packages;
 using LogisticsAndDeliveries.Domain.Drivers;
-using LogisticsAndDeliveries.Domain.Deliveries;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
@@ -10,7 +9,6 @@ namespace LogisticsAndDeliveries.Infrastructure.Persistence.DomainModel
     {
         public DbSet<Package> Package { get; set; }
         public DbSet<Driver> Driver { get; set; }
-        public DbSet<Delivery> Delivery { get; set; }
 
         public DomainDbContext(DbContextOptions<DomainDbContext> options) : base(options) { }
 

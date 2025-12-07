@@ -13,7 +13,7 @@ namespace LogisticsAndDeliveries.Application.Packages.CreatePackage
         public string DeliveryAddress { get; init; } = string.Empty;
         public double DeliveryLatitude { get; init; }
         public double DeliveryLongitude { get; init; }
-        public DateOnly ScheduledDate { get; init; }
+        public DateOnly DeliveryDate { get; init; }
         public Guid DriverId { get; init; }
     }
 }

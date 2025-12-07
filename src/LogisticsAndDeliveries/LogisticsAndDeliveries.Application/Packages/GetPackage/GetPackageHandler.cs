@@ -24,13 +24,21 @@ namespace LogisticsAndDeliveries.Application.Packages.GetPackage
             var packageDto = new PackageDto
             {
                 Id = package.Id,
+                DriverId = package.DriverId,
                 Number = package.Number,
                 PatientId = package.PatientId,
                 PatientName = package.PatientName,
                 PatientPhone = package.PatientPhone,
                 DeliveryAddress = package.DeliveryAddress,
                 DeliveryLatitude = package.DeliveryLatitude,
-                DeliveryLongitude = package.DeliveryLongitude
+                DeliveryLongitude = package.DeliveryLongitude,
+                DeliveryDate = package.DeliveryDate,
+                DeliveryStatus = package.DeliveryStatus.ToString(),
+                DeliveryEvidence = package.DeliveryEvidence,
+                DeliveryOrder = package.DeliveryOrder,
+                IncidentType = package.IncidentType?.ToString(),
+                IncidentDescription = package.IncidentDescription,
+                UpdatedAt = package.UpdatedAt
             };
             return Result<PackageDto>.Success(packageDto);
         }

@@ -16,6 +16,9 @@ namespace LogisticsAndDeliveries.Infrastructure.Persistence.DomainModel.Config
             builder.Property(p => p.Id)
                 .HasColumnName("id");
 
+            builder.Property(d => d.DriverId)
+                .HasColumnName("driverId");
+
             builder.Property(p => p.Number)
                 .HasColumnName("number")
                 .HasMaxLength(100);
@@ -42,6 +45,41 @@ namespace LogisticsAndDeliveries.Infrastructure.Persistence.DomainModel.Config
             builder.Property(p => p.DeliveryLongitude)
                 .HasColumnName("deliveryLongitude")
                 .HasColumnType("double precision");
+
+            builder.Property(p => p.DeliveryDate)
+                .HasColumnName("deliveryDate")
+                .HasColumnType("date");
+
+            builder.Property(p => p.DeliveryEvidence)
+                .HasColumnName("deliveryEvidence");
+
+            builder.Property(p => p.DeliveryOrder)
+                .HasColumnName("deliveryOrder")
+                .HasColumnType("integer");
+
+            var statusConverter = new ValueConverter<DeliveryStatus, string>(
+                statusConverter => statusConverter.ToString(),
+                deliveryStatus => (DeliveryStatus)Enum.Parse(typeof(DeliveryStatus), deliveryStatus)
+            );
+
+            builder.Property(p => p.DeliveryStatus)
+                .HasConversion(statusConverter)
+                .HasColumnName("deliveryStatus");
+
+            var incidentTypeConverter = new ValueConverter<IncidentType, string>(
+                incidentTypeConverter => incidentTypeConverter.ToString(),
+                incidentType => (IncidentType)Enum.Parse(typeof(IncidentType), incidentType)
+            );
+
+            builder.Property(p => p.IncidentType)
+                .HasConversion(incidentTypeConverter)
+                .HasColumnName("incidentType");
+
+            builder.Property(p => p.IncidentDescription)
+                .HasColumnName("incidentDescription");
+
+            builder.Property(d => d.UpdatedAt)
+                .HasColumnName("updatedAt");
 
             builder.Ignore("_domainEvents");
             builder.Ignore(x => x.DomainEvents);
