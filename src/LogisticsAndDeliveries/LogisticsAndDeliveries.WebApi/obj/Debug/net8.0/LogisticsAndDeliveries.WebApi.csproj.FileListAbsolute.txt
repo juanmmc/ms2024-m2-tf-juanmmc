@@ -294,7 +294,6 @@ C:\Users\PC\Documents\Git\microservicios\ms2024-m2-tf-juanmmc\src\LogisticsAndDe
 C:\Users\PC\Documents\Git\microservicios\ms2024-m2-tf-juanmmc\src\LogisticsAndDeliveries\LogisticsAndDeliveries.WebApi\obj\Debug\net8.0\staticwebassets.build.json.cache
 C:\Users\PC\Documents\Git\microservicios\ms2024-m2-tf-juanmmc\src\LogisticsAndDeliveries\LogisticsAndDeliveries.WebApi\obj\Debug\net8.0\staticwebassets.development.json
 C:\Users\PC\Documents\Git\microservicios\ms2024-m2-tf-juanmmc\src\LogisticsAndDeliveries\LogisticsAndDeliveries.WebApi\obj\Debug\net8.0\staticwebassets.build.endpoints.json
-C:\Users\PC\Documents\Git\microservicios\ms2024-m2-tf-juanmmc\src\LogisticsAndDeliveries\LogisticsAndDeliveries.WebApi\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
 C:\Users\PC\Documents\Git\microservicios\ms2024-m2-tf-juanmmc\src\LogisticsAndDeliveries\LogisticsAndDeliveries.WebApi\obj\Debug\net8.0\Logistic.52051185.Up2Date
 C:\Users\PC\Documents\Git\microservicios\ms2024-m2-tf-juanmmc\src\LogisticsAndDeliveries\LogisticsAndDeliveries.WebApi\obj\Debug\net8.0\LogisticsAndDeliveries.WebApi.dll
 C:\Users\PC\Documents\Git\microservicios\ms2024-m2-tf-juanmmc\src\LogisticsAndDeliveries\LogisticsAndDeliveries.WebApi\obj\Debug\net8.0\refint\LogisticsAndDeliveries.WebApi.dll

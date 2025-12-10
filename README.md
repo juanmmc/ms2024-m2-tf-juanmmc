@@ -18,6 +18,10 @@ Microservicio para gestionar operaciones de reparto (entregas) de paquetes alime
 - Registrar incidentes de entrega (solo si el paquete está en estado Failed).
 - Registrar orden para planificación de entrega.
 - Listar entregas asignadas a un repartidor por fecha y ordenados según el orden definido.
+ 
+## Ejecutar la API desde consola
+
+dotnet run --project src/LogisticsAndDeliveries.WebApi/LogisticsAndDeliveries.WebApi.csproj
 
 ## Ejecución del entorno con Docker Compose
 
