@@ -357,14 +357,15 @@ public class PackageTest
         pkg.MarkDeliveryInTransit();
         pkg.MarkDeliveryFailed();
         var before = DateTime.UtcNow;
+        var incidentDescription = "Wrong street";
 
         // Act
-        pkg.RegisterDeliveryIncident(IncidentType.IncorrectAddress, "Wrong street");
+        pkg.RegisterDeliveryIncident(IncidentType.IncorrectAddress, incidentDescription);
         var after = DateTime.UtcNow;
 
         // Assert
         Assert.Equal(IncidentType.IncorrectAddress, pkg.IncidentType);
-        Assert.Equal("Wrong street", pkg.IncidentDescription);
+        Assert.Equal(incidentDescription, pkg.IncidentDescription);
         Assert.NotNull(pkg.UpdatedAt);
         Assert.True(pkg.UpdatedAt.Value >= before && pkg.UpdatedAt.Value <= after);
     }

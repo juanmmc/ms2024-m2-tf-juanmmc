@@ -20,11 +20,8 @@ public class DriverControllerIntegrationTest
     {
         // Arrange
         var id = Guid.NewGuid();
-        var payload = new
-        {
-            id = id,
-            name = "Eduardo Avaroa"
-        };
+        var name = "Eduardo Avaroa";
+        var payload = new { id, name };
 
         // Act
         var response = await _httpClient.PostAsJsonAsync("/api/Driver/createDriver", payload);
@@ -41,7 +38,7 @@ public class DriverControllerIntegrationTest
         // Arrange
         var id = Guid.NewGuid();
         var name = "Simón Bolivar";
-        var createPayload = new { id = id, name = name };
+        var createPayload = new { id, name };
         var createResp = await _httpClient.PostAsJsonAsync("/api/Driver/createDriver", createPayload);
         createResp.EnsureSuccessStatusCode();
 
@@ -61,7 +58,8 @@ public class DriverControllerIntegrationTest
     {
         // Arrange
         var id = Guid.NewGuid();
-        var createPayload = new { id = id, name = "Antonio José de Sucre" };
+        var name = "Antonio José de Sucre";
+        var createPayload = new { id, name };
         var createResp = await _httpClient.PostAsJsonAsync("/api/Driver/createDriver", createPayload);
         createResp.EnsureSuccessStatusCode();
 
