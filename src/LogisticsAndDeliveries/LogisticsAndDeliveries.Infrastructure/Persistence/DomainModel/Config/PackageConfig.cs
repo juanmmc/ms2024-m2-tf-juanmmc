@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace LogisticsAndDeliveries.Infrastructure.Persistence.DomainModel.Config
 {
-    internal class PackageConfig : IEntityTypeConfiguration<Package>
+    public class PackageConfig : IEntityTypeConfiguration<Package>
     {
         public void Configure(EntityTypeBuilder<Package> builder)
         {

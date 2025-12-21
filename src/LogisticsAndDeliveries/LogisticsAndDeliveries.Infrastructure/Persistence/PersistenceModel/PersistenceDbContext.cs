@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LogisticsAndDeliveries.Infrastructure.Persistence.PersistenceModel
 {
-    internal class PersistenceDbContext : DbContext, IDatabase
+    public class PersistenceDbContext : DbContext, IDatabase
     {
         public DbSet<PackagePersistenceModel> Package { get; set; }
         public DbSet<DriverPersistenceModel> Driver { get; set; }

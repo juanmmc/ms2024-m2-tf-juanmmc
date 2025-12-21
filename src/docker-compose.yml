@@ -1,6 +1,6 @@
 services:
   api:
-    image: juanmurielc/logisticsanddeliveries_webapi:2.0.0
+    image: juanmurielc/logisticsanddeliveries_webapi:3.0.0
     container_name: api_container
     ports:
       - 80:80

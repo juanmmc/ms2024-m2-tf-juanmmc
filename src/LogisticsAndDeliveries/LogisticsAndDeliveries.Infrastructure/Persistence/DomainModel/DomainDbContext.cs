@@ -5,7 +5,7 @@ using System.Reflection;
 
 namespace LogisticsAndDeliveries.Infrastructure.Persistence.DomainModel
 {
-    internal class DomainDbContext : DbContext
+    public class DomainDbContext : DbContext
     {
         public DbSet<Package> Package { get; set; }
         public DbSet<Driver> Driver { get; set; }

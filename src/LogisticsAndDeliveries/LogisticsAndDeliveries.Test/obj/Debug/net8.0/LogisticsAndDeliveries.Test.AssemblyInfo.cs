@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("LogisticsAndDeliveries.Test")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6fb8a39f01c6d5b12ecd393919f135da356628dc")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1d5cf5b62fc410a0107b4e1b677d3672d3088a7d")]
 [assembly: System.Reflection.AssemblyProductAttribute("LogisticsAndDeliveries.Test")]
 [assembly: System.Reflection.AssemblyTitleAttribute("LogisticsAndDeliveries.Test")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

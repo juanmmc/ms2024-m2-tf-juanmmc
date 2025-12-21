@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace LogisticsAndDeliveries.Infrastructure.Persistence.PersistenceModel.EFCoreEntities
 {
     [Table("driver")]
-    internal class DriverPersistenceModel
+    public class DriverPersistenceModel
     {
         [Key]
         [Column("id")]

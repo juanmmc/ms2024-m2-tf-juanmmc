@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace LogisticsAndDeliveries.Infrastructure.Persistence.DomainModel.Config
 {
-    internal class DriverConfig : IEntityTypeConfiguration<Driver>
+    public class DriverConfig : IEntityTypeConfiguration<Driver>
     {
         public void Configure(EntityTypeBuilder<Driver> builder)
         {

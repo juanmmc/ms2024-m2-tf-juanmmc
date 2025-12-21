@@ -1,0 +1,340 @@
+{
+  "consumer": {
+    "name": "DriverConsumer"
+  },
+  "interactions": [
+    {
+      "description": "A GET request to retrieve a non-existent driver",
+      "pending": false,
+      "providerStates": [
+        {
+          "name": "No driver with ID 00000000-0000-0000-0000-000000000000 exists"
+        }
+      ],
+      "request": {
+        "headers": {
+          "Accept": [
+            "application/json"
+          ]
+        },
+        "matchingRules": {
+          "query": {
+            "driverId": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            }
+          }
+        },
+        "method": "GET",
+        "path": "/api/Driver/getDriver",
+        "query": {
+          "driverId": [
+            "00000000-0000-0000-0000-000000000000"
+          ]
+        }
+      },
+      "response": {
+        "status": 404
+      },
+      "type": "Synchronous/HTTP"
+    },
+    {
+      "description": "A GET request to retrieve all drivers",
+      "pending": false,
+      "providerStates": [
+        {
+          "name": "Multiple drivers exist in the system"
+        }
+      ],
+      "request": {
+        "headers": {
+          "Accept": [
+            "application/json"
+          ]
+        },
+        "method": "GET",
+        "path": "/api/Driver/getDrivers"
+      },
+      "response": {
+        "body": {
+          "content": [
+            {
+              "id": "d8c8032a-a6bf-4390-8f6e-4c8de68fd7a0",
+              "lastLocationUpdate": "2025-12-20T10:30:00Z",
+              "latitude": 40.4168,
+              "longitude": -3.7038,
+              "name": "Juan Pérez"
+            }
+          ],
+          "contentType": "application/json",
+          "encoded": false
+        },
+        "headers": {
+          "Content-Type": [
+            "application/json; charset=utf-8"
+          ]
+        },
+        "matchingRules": {
+          "body": {
+            "$": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type",
+                  "min": 1
+                }
+              ]
+            },
+            "$[*].id": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$[*].lastLocationUpdate": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$[*].latitude": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "decimal"
+                }
+              ]
+            },
+            "$[*].longitude": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "decimal"
+                }
+              ]
+            },
+            "$[*].name": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            }
+          }
+        },
+        "status": 200
+      },
+      "type": "Synchronous/HTTP"
+    },
+    {
+      "description": "A GET request to retrieve an existing driver",
+      "pending": false,
+      "providerStates": [
+        {
+          "name": "A driver with ID 3fa85f64-5717-4562-b3fc-2c963f66afa6 exists"
+        }
+      ],
+      "request": {
+        "headers": {
+          "Accept": [
+            "application/json"
+          ]
+        },
+        "matchingRules": {
+          "query": {
+            "driverId": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            }
+          }
+        },
+        "method": "GET",
+        "path": "/api/Driver/getDriver",
+        "query": {
+          "driverId": [
+            "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+          ]
+        }
+      },
+      "response": {
+        "body": {
+          "content": {
+            "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "lastLocationUpdate": "2025-12-20T10:30:00Z",
+            "latitude": 40.4168,
+            "longitude": -3.7038,
+            "name": "Juan Pérez"
+          },
+          "contentType": "application/json",
+          "encoded": false
+        },
+        "headers": {
+          "Content-Type": [
+            "application/json; charset=utf-8"
+          ]
+        },
+        "matchingRules": {
+          "body": {
+            "$.id": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.lastLocationUpdate": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.latitude": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "decimal"
+                }
+              ]
+            },
+            "$.longitude": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "decimal"
+                }
+              ]
+            },
+            "$.name": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            }
+          }
+        },
+        "status": 200
+      },
+      "type": "Synchronous/HTTP"
+    },
+    {
+      "description": "A POST request to update driver location",
+      "pending": false,
+      "providerStates": [
+        {
+          "name": "A driver with ID 3fa85f64-5717-4562-b3fc-2c963f66afa6 exists"
+        }
+      ],
+      "request": {
+        "body": {
+          "content": {
+            "driverId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "latitude": 40.4168,
+            "longitude": -3.7038
+          },
+          "contentType": "application/json",
+          "encoded": false
+        },
+        "headers": {
+          "Accept": [
+            "application/json"
+          ],
+          "Content-Type": [
+            "application/json"
+          ]
+        },
+        "method": "POST",
+        "path": "/api/Driver/updateDriverLocation"
+      },
+      "response": {
+        "body": {
+          "content": true,
+          "contentType": "application/json",
+          "encoded": false
+        },
+        "headers": {
+          "Content-Type": [
+            "application/json; charset=utf-8"
+          ]
+        },
+        "matchingRules": {
+          "body": {
+            "$": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            }
+          }
+        },
+        "status": 200
+      },
+      "type": "Synchronous/HTTP"
+    },
+    {
+      "description": "A POST request to update location of non-existent driver",
+      "pending": false,
+      "providerStates": [
+        {
+          "name": "No driver with ID 00000000-0000-0000-0000-000000000000 exists"
+        }
+      ],
+      "request": {
+        "body": {
+          "content": {
+            "driverId": "00000000-0000-0000-0000-000000000000",
+            "latitude": 40.4168,
+            "longitude": -3.7038
+          },
+          "contentType": "application/json",
+          "encoded": false
+        },
+        "headers": {
+          "Accept": [
+            "application/json"
+          ],
+          "Content-Type": [
+            "application/json"
+          ]
+        },
+        "method": "POST",
+        "path": "/api/Driver/updateDriverLocation"
+      },
+      "response": {
+        "status": 404
+      },
+      "type": "Synchronous/HTTP"
+    }
+  ],
+  "metadata": {
+    "pactRust": {
+      "ffi": "0.4.27",
+      "models": "1.2.8"
+    },
+    "pactSpecification": {
+      "version": "4.0"
+    }
+  },
+  "provider": {
+    "name": "LogisticsAndDeliveries.WebApi"
+  }
+}

@@ -1,5 +1,5 @@
 using LogisticsAndDeliveries.Infrastructure;
-using System.Text.Json.Serialization;
+using LogisticsAndDeliveries.WebApi.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,12 +20,17 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Aplicar migraciones automáticamente al iniciar
 await app.Services.ApplyMigrationsAsync();
 
+// Middleware para Provider States (en testing y desarrollo)
+if (app.Environment.IsDevelopment() || app.Environment.EnvironmentName == "Testing")
+{
+    app.UseProviderState();
+}
+
 // Configure the HTTP request pipeline.
-//if (app.Environment.IsDevelopment())
-if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
+//if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
+if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
@@ -38,3 +43,5 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+public partial class Program { }

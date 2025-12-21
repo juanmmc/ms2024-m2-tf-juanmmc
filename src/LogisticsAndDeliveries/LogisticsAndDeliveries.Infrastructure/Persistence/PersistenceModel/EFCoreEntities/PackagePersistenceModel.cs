@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace LogisticsAndDeliveries.Infrastructure.Persistence.PersistenceModel.EFCoreEntities
 {
     [Table("package")]
-    internal class PackagePersistenceModel
+    public class PackagePersistenceModel
     {
         [Key]
         [Column("id")]
