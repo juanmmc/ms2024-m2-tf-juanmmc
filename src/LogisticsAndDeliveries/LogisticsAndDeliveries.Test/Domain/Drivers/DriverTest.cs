@@ -1,7 +1,7 @@
 using LogisticsAndDeliveries.Core.Results;
 using LogisticsAndDeliveries.Domain.Drivers;
 
-namespace LogisticsAndDeliveries.Test;
+namespace LogisticsAndDeliveries.Test.Domain.Drivers;
 
 public class DriverTest
 {

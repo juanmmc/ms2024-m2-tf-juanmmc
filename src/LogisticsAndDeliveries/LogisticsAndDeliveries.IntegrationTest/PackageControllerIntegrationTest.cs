@@ -123,7 +123,7 @@ public class PackageControllerIntegrationTest
         await CreatePackageAsync(otherDriverId, date.AddDays(1));
 
         // Act
-        var resp = await _httpClient.GetAsync($"/api/Package/getPackagesByDriverAndDeliveryDate?driverId={driverId}&deliveryDate={date}");
+        var resp = await _httpClient.GetAsync($"/api/Package/getPackagesByDriverAndDeliveryDate?driverId={driverId}&deliveryDate={date:yyyy-MM-dd}");
         resp.EnsureSuccessStatusCode();
 
         var listResult = await resp.Content.ReadFromJsonAsync<List<PackageDto>>();

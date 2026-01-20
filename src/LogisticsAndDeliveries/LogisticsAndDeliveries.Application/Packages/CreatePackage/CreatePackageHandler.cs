@@ -5,7 +5,7 @@ using MediatR;
 
 namespace LogisticsAndDeliveries.Application.Packages.CreatePackage
 {
-    internal class CreatePackageHandler : IRequestHandler<CreatePackageCommand, Result<Guid>>
+    public class CreatePackageHandler : IRequestHandler<CreatePackageCommand, Result<Guid>>
     {
         private readonly IPackageRepository _packageRepository;
         private readonly IUnitOfWork _unitOfWork;

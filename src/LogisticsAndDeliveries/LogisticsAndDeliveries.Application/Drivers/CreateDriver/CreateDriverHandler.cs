@@ -5,7 +5,7 @@ using MediatR;
 
 namespace LogisticsAndDeliveries.Application.Drivers.CreateDriver
 {
-    internal class CreateDriverHandler : IRequestHandler<CreateDriverCommand, Result<Guid>>
+    public class CreateDriverHandler : IRequestHandler<CreateDriverCommand, Result<Guid>>
     {
         private readonly IDriverRepository _driverRepository;
         private readonly IUnitOfWork _unitOfWork;

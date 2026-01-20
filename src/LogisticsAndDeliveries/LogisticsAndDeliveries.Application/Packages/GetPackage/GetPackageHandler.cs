@@ -5,7 +5,7 @@ using MediatR;
 
 namespace LogisticsAndDeliveries.Application.Packages.GetPackage
 {
-    internal class GetPackageHandler : IRequestHandler<GetPackageQuery, Result<PackageDto>>
+    public class GetPackageHandler : IRequestHandler<GetPackageQuery, Result<PackageDto>>
     {
         private readonly IPackageRepository _packageRepository;
 

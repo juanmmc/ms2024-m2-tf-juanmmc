@@ -5,7 +5,7 @@ using MediatR;
 
 namespace LogisticsAndDeliveries.Application.Packages.MarkDeliveryCompleted
 {
-    internal class MarkDeliveryCompletedHandler : IRequestHandler<MarkDeliveryCompletedCommand, Result<bool>>
+    public class MarkDeliveryCompletedHandler : IRequestHandler<MarkDeliveryCompletedCommand, Result<bool>>
     {
         private readonly IPackageRepository _packageRepository;
         private readonly IUnitOfWork _unitOfWork;

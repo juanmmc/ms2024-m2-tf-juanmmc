@@ -5,7 +5,7 @@ using MediatR;
 
 namespace LogisticsAndDeliveries.Application.Packages.MarkDeliveryFailed
 {
-    internal class MarkDeliveryFailedHandler : IRequestHandler<MarkDeliveryFailedCommand, Result<bool>>
+    public class MarkDeliveryFailedHandler : IRequestHandler<MarkDeliveryFailedCommand, Result<bool>>
     {
         private readonly IPackageRepository _packageRepository;
         private readonly IUnitOfWork _unitOfWork;

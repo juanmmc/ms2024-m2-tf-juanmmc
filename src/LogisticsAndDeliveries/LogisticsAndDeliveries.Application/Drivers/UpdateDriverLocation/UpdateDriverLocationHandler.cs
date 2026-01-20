@@ -5,7 +5,7 @@ using MediatR;
 
 namespace LogisticsAndDeliveries.Application.Drivers.UpdateDriverLocation
 {
-    internal class UpdateDriverLocationHandler : IRequestHandler<UpdateDriverLocationCommand, Result<bool>>
+    public class UpdateDriverLocationHandler : IRequestHandler<UpdateDriverLocationCommand, Result<bool>>
     {
         private readonly IDriverRepository _driverRepository;
         private readonly IUnitOfWork _unitOfWork;

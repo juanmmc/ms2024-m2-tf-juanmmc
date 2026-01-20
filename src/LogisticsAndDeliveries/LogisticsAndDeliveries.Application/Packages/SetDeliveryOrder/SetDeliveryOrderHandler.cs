@@ -5,7 +5,7 @@ using MediatR;
 
 namespace LogisticsAndDeliveries.Application.Packages.SetDeliveryOrder
 {
-    internal class SetDeliveryOrderHandler : IRequestHandler<SetDeliveryOrderCommand, Result<bool>>
+    public class SetDeliveryOrderHandler : IRequestHandler<SetDeliveryOrderCommand, Result<bool>>
     {
         private readonly IPackageRepository _packageRepository;
         private readonly IUnitOfWork _unitOfWork;

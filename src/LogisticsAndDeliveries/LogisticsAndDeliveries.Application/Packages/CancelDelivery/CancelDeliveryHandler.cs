@@ -5,7 +5,7 @@ using MediatR;
 
 namespace LogisticsAndDeliveries.Application.Packages.CancelDelivery
 {
-    internal class CancelDeliveryHandler : IRequestHandler<CancelDeliveryCommand, Result<bool>>
+    public class CancelDeliveryHandler : IRequestHandler<CancelDeliveryCommand, Result<bool>>
     {
         private readonly IPackageRepository _packageRepository;
         private readonly IUnitOfWork _unitOfWork;

@@ -5,7 +5,7 @@ using MediatR;
 
 namespace LogisticsAndDeliveries.Application.Packages.MarkDeliveryInTransit
 {
-    internal class MarkDeliveryInTransitHandler : IRequestHandler<MarkDeliveryInTransitCommand, Result<bool>>
+    public class MarkDeliveryInTransitHandler : IRequestHandler<MarkDeliveryInTransitCommand, Result<bool>>
     {
         private readonly IPackageRepository _packageRepository;
         private readonly IUnitOfWork _unitOfWork;

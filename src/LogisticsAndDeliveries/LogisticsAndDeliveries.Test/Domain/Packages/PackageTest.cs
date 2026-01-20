@@ -1,7 +1,7 @@
 using LogisticsAndDeliveries.Core.Results;
 using LogisticsAndDeliveries.Domain.Packages;
 
-namespace LogisticsAndDeliveries.Test;
+namespace LogisticsAndDeliveries.Test.Domain.Packages;
 
 public class PackageTest
 {
@@ -63,6 +63,63 @@ public class PackageTest
         // Assert
         var ex = Assert.Throws<DomainException>(act);
         Assert.Equal(PackageErrors.NumberIsRequired().Code, ex.Error.Code);
+    }
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    [InlineData("   ")]
+    public void Constructor_InvalidPatientName_ThrowsDomainException(string invalid)
+    {
+        // Arrange
+        var id = Guid.NewGuid();
+        var patientId = Guid.NewGuid();
+        var date = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(1));
+
+        // Act
+        Action act = () => new Package(id, "n", patientId, invalid, "p", "a", 0, 0, date, Guid.NewGuid());
+
+        // Assert
+        var ex = Assert.Throws<DomainException>(act);
+        Assert.Equal(PackageErrors.PatientNameIsRequired().Code, ex.Error.Code);
+    }
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    [InlineData("   ")]
+    public void Constructor_InvalidPatientPhone_ThrowsDomainException(string invalid)
+    {
+        // Arrange
+        var id = Guid.NewGuid();
+        var patientId = Guid.NewGuid();
+        var date = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(1));
+
+        // Act
+        Action act = () => new Package(id, "n", patientId, "name", invalid, "a", 0, 0, date, Guid.NewGuid());
+
+        // Assert
+        var ex = Assert.Throws<DomainException>(act);
+        Assert.Equal(PackageErrors.PatientPhoneIsRequired().Code, ex.Error.Code);
+    }
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    [InlineData("   ")]
+    public void Constructor_InvalidDeliveryAddress_ThrowsDomainException(string invalid)
+    {
+        // Arrange
+        var id = Guid.NewGuid();
+        var patientId = Guid.NewGuid();
+        var date = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(1));
+
+        // Act
+        Action act = () => new Package(id, "n", patientId, "name", "phone", invalid, 0, 0, date, Guid.NewGuid());
+
+        // Assert
+        var ex = Assert.Throws<DomainException>(act);
+        Assert.Equal(PackageErrors.DeliveryAddressIsRequired().Code, ex.Error.Code);
     }
 
     [Fact]
@@ -127,6 +184,22 @@ public class PackageTest
         // Assert
         var ex = Assert.Throws<DomainException>(act);
         Assert.Equal(PackageErrors.InvalidDeliveryDate().Code, ex.Error.Code);
+    }
+
+    [Fact]
+    public void Constructor_WithEmptyDriverId_ThrowsDomainException()
+    {
+        // Arrange
+        var id = Guid.NewGuid();
+        var patientId = Guid.NewGuid();
+        var date = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(1));
+
+        // Act
+        Action act = () => new Package(id, "n", patientId, "name", "phone", "address", 0, 0, date, Guid.Empty);
+
+        // Assert
+        var ex = Assert.Throws<DomainException>(act);
+        Assert.Equal(PackageErrors.DriverIdIsRequired().Code, ex.Error.Code);
     }
 
     [Theory]
@@ -369,4 +442,6 @@ public class PackageTest
         Assert.NotNull(pkg.UpdatedAt);
         Assert.True(pkg.UpdatedAt.Value >= before && pkg.UpdatedAt.Value <= after);
     }
+
+
 }

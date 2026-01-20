@@ -5,7 +5,7 @@ using MediatR;
 
 namespace LogisticsAndDeliveries.Application.Packages.RegisterDeliveryIncident
 {
-    internal class RegisterDeliveryIncidentHandler : IRequestHandler<RegisterDeliveryIncidentCommand, Result<bool>>
+    public class RegisterDeliveryIncidentHandler : IRequestHandler<RegisterDeliveryIncidentCommand, Result<bool>>
     {
         private readonly IPackageRepository _packageRepository;
         private readonly IUnitOfWork _unitOfWork;
