@@ -6,6 +6,9 @@ using LogisticsAndDeliveries.Infrastructure.Persistence;
 using LogisticsAndDeliveries.Infrastructure.Persistence.DomainModel;
 using LogisticsAndDeliveries.Infrastructure.Persistence.PersistenceModel;
 using LogisticsAndDeliveries.Infrastructure.Persistence.Repositories;
+using LogisticsAndDeliveries.Infrastructure.Messaging;
+using LogisticsAndDeliveries.Infrastructure.Messaging.Consumers;
+using LogisticsAndDeliveries.Infrastructure.Messaging.Outbox;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,6 +23,10 @@ namespace LogisticsAndDeliveries.Infrastructure
         {
             services.AddApplication()
                 .AddPersistence(configuration);
+
+            services.Configure<RabbitMqOptions>(configuration.GetSection(RabbitMqOptions.SectionName));
+            services.AddHostedService<PackageDispatchCreatedConsumer>();
+            services.AddHostedService<OutboxPublisherService>();
 
             // Register MediatR handlers defined in the Infrastructure assembly (e.g., query handlers)
             services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
@@ -43,6 +50,22 @@ namespace LogisticsAndDeliveries.Infrastructure
 
                 // Aplicar migraciones pendientes
                 await context.Database.MigrateAsync();
+
+                await context.Database.ExecuteSqlRawAsync(@"
+                    CREATE TABLE IF NOT EXISTS outbox_message (
+                        id uuid NOT NULL,
+                        eventname text NOT NULL,
+                        type text NOT NULL,
+                        content text NOT NULL,
+                        occurredonutc timestamp with time zone NOT NULL,
+                        processedonutc timestamp with time zone NULL,
+                        error text NULL,
+                        CONSTRAINT PK_outbox_message PRIMARY KEY (id)
+                    );");
+
+                await context.Database.ExecuteSqlRawAsync(@"
+                    CREATE INDEX IF NOT EXISTS IX_outbox_message_processedOnUtc_occurredOnUtc
+                    ON outbox_message (processedonutc, occurredonutc);");
 
                 logger.LogInformation("Migraciones aplicadas exitosamente.");
             }

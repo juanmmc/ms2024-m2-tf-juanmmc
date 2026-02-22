@@ -1,6 +1,7 @@
 ﻿using LogisticsAndDeliveries.Core.Abstractions;
 using LogisticsAndDeliveries.Core.Results;
 using LogisticsAndDeliveries.Domain.Drivers;
+using LogisticsAndDeliveries.Domain.Packages.Events;
 using System.Xml.Linq;
 
 namespace LogisticsAndDeliveries.Domain.Packages
@@ -100,6 +101,7 @@ namespace LogisticsAndDeliveries.Domain.Packages
 
             this.DeliveryStatus = DeliveryStatus.InTransit;
             this.UpdatedAt = DateTime.UtcNow;
+            AddStatusChangedDomainEvent();
         }
 
         public void MarkDeliveryCompleted(string deliveryEvidence)
@@ -113,6 +115,7 @@ namespace LogisticsAndDeliveries.Domain.Packages
             this.DeliveryEvidence = deliveryEvidence;
             this.DeliveryStatus = DeliveryStatus.Completed;
             this.UpdatedAt = DateTime.UtcNow;
+            AddStatusChangedDomainEvent();
         }
 
         public void MarkDeliveryFailed()
@@ -121,6 +124,7 @@ namespace LogisticsAndDeliveries.Domain.Packages
                 throw new DomainException(DeliveryErrors.InvalidStatusTransition);
             this.DeliveryStatus = DeliveryStatus.Failed;
             this.UpdatedAt = DateTime.UtcNow;
+            AddStatusChangedDomainEvent();
         }
 
         public void CancelDelivery()
@@ -129,6 +133,7 @@ namespace LogisticsAndDeliveries.Domain.Packages
                 throw new DomainException(DeliveryErrors.CannotCancelCompletedDelivery);
             this.DeliveryStatus = DeliveryStatus.Cancelled;
             this.UpdatedAt = DateTime.UtcNow;
+            AddStatusChangedDomainEvent();
         }
 
         public void RegisterDeliveryIncident(IncidentType incidentType, string incidentDescription)
@@ -142,6 +147,20 @@ namespace LogisticsAndDeliveries.Domain.Packages
             this.IncidentType = incidentType;
             this.IncidentDescription = incidentDescription;
             this.UpdatedAt = DateTime.UtcNow;
+            AddStatusChangedDomainEvent();
+        }
+
+        private void AddStatusChangedDomainEvent()
+        {
+            AddDomainEvent(new PackageDeliveryStatusChangedDomainEvent(
+                Id,
+                DriverId,
+                Number,
+                DeliveryStatus.ToString(),
+                IncidentType?.ToString(),
+                IncidentDescription,
+                DeliveryEvidence,
+                UpdatedAt));
         }
     }
 }

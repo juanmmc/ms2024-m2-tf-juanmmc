@@ -52,6 +52,48 @@ namespace LogisticsAndDeliveries.Infrastructure.Migrations
                     b.ToTable("driver");
                 });
 
+            modelBuilder.Entity("LogisticsAndDeliveries.Infrastructure.Outbox.OutboxMessage", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("content");
+
+                    b.Property<string>("Error")
+                        .HasColumnType("text")
+                        .HasColumnName("error");
+
+                    b.Property<string>("EventName")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("eventname");
+
+                    b.Property<DateTime>("OccurredOnUtc")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("occurredonutc");
+
+                    b.Property<DateTime?>("ProcessedOnUtc")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("processedonutc");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("type");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProcessedOnUtc", "OccurredOnUtc")
+                        .HasDatabaseName("IX_outbox_message_processedOnUtc_occurredOnUtc");
+
+                    b.ToTable("outbox_message");
+                });
+
             modelBuilder.Entity("LogisticsAndDeliveries.Infrastructure.Persistence.PersistenceModel.EFCoreEntities.PackagePersistenceModel", b =>
                 {
                     b.Property<Guid>("Id")

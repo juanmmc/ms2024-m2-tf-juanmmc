@@ -1,6 +1,8 @@
 ﻿using LogisticsAndDeliveries.Core.Abstractions;
+using LogisticsAndDeliveries.Domain.Packages.Events;
 using LogisticsAndDeliveries.Infrastructure.Persistence.DomainModel;
-using MediatR;
+using LogisticsAndDeliveries.Infrastructure.Outbox;
+using System.Text.Json;
 using System.Collections.Immutable;
 
 namespace LogisticsAndDeliveries.Infrastructure.Persistence
@@ -8,12 +10,11 @@ namespace LogisticsAndDeliveries.Infrastructure.Persistence
     internal class UnitOfWork : IUnitOfWork
     {
         private readonly DomainDbContext _dbContext;
-        private readonly IMediator _mediator;
+        private const string PackageDispatchStatusUpdatedEventName = "logistica.paquete.estado-actualizado";
 
-        public UnitOfWork(DomainDbContext dbContext, IMediator mediator)
+        public UnitOfWork(DomainDbContext dbContext)
         {
             _dbContext = dbContext;
-            _mediator = mediator;
         }
 
         public async Task CommitAsync(CancellationToken cancellationToken = default)
@@ -32,14 +33,49 @@ namespace LogisticsAndDeliveries.Infrastructure.Persistence
                 .SelectMany(domainEvents => domainEvents)
                 .ToList();
 
-            //Publish Domain Events
-            foreach (var domainEvent in domainEvents)
+            var outboxMessages = domainEvents
+                .Select(MapToOutboxMessage)
+                .Where(message => message is not null)
+                .Cast<OutboxMessage>()
+                .ToList();
+
+            if (outboxMessages.Count > 0)
             {
-                await _mediator.Publish(domainEvent, cancellationToken);
+                await _dbContext.OutboxMessage.AddRangeAsync(outboxMessages, cancellationToken);
             }
 
 
             await _dbContext.SaveChangesAsync(cancellationToken);
+        }
+
+        private OutboxMessage? MapToOutboxMessage(DomainEvent domainEvent)
+        {
+            if (domainEvent is PackageDeliveryStatusChangedDomainEvent packageEvent)
+            {
+                var payload = new
+                {
+                    packageId = packageEvent.PackageId,
+                    driverId = packageEvent.DriverId,
+                    number = packageEvent.Number,
+                    deliveryStatus = packageEvent.DeliveryStatus,
+                    incidentType = packageEvent.IncidentType,
+                    incidentDescription = packageEvent.IncidentDescription,
+                    deliveryEvidence = packageEvent.DeliveryEvidence,
+                    occurredOn = packageEvent.OccurredOn,
+                    updatedAt = packageEvent.UpdatedAt
+                };
+
+                return new OutboxMessage
+                {
+                    Id = Guid.NewGuid(),
+                    EventName = PackageDispatchStatusUpdatedEventName,
+                    Type = domainEvent.GetType().FullName ?? nameof(PackageDeliveryStatusChangedDomainEvent),
+                    Content = JsonSerializer.Serialize(payload),
+                    OccurredOnUtc = domainEvent.OccurredOn.ToUniversalTime()
+                };
+            }
+
+            return null;
         }
     }
 }
