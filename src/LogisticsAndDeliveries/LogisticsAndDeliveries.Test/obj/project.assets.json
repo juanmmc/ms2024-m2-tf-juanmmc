@@ -6340,11 +6340,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\PC\\Documents\\Git\\microservicios\\ms2024-m2-tf-juanmmc\\src\\LogisticsAndDeliveries\\LogisticsAndDeliveries.Test\\LogisticsAndDeliveries.Test.csproj",
+      "projectUniqueName": "C:\\Users\\PC\\Documents\\Git\\microservicios\\nur-tricenter-api-logistics-and-deliveries\\src\\LogisticsAndDeliveries\\LogisticsAndDeliveries.Test\\LogisticsAndDeliveries.Test.csproj",
       "projectName": "LogisticsAndDeliveries.Test",
-      "projectPath": "C:\\Users\\PC\\Documents\\Git\\microservicios\\ms2024-m2-tf-juanmmc\\src\\LogisticsAndDeliveries\\LogisticsAndDeliveries.Test\\LogisticsAndDeliveries.Test.csproj",
+      "projectPath": "C:\\Users\\PC\\Documents\\Git\\microservicios\\nur-tricenter-api-logistics-and-deliveries\\src\\LogisticsAndDeliveries\\LogisticsAndDeliveries.Test\\LogisticsAndDeliveries.Test.csproj",
       "packagesPath": "C:\\Users\\PC\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\PC\\Documents\\Git\\microservicios\\ms2024-m2-tf-juanmmc\\src\\LogisticsAndDeliveries\\LogisticsAndDeliveries.Test\\obj\\",
+      "outputPath": "C:\\Users\\PC\\Documents\\Git\\microservicios\\nur-tricenter-api-logistics-and-deliveries\\src\\LogisticsAndDeliveries\\LogisticsAndDeliveries.Test\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -6365,11 +6365,11 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "C:\\Users\\PC\\Documents\\Git\\microservicios\\ms2024-m2-tf-juanmmc\\src\\LogisticsAndDeliveries\\LogisticsAndDeliveries.Application\\LogisticsAndDeliveries.Application.csproj": {
-              "projectPath": "C:\\Users\\PC\\Documents\\Git\\microservicios\\ms2024-m2-tf-juanmmc\\src\\LogisticsAndDeliveries\\LogisticsAndDeliveries.Application\\LogisticsAndDeliveries.Application.csproj"
+            "C:\\Users\\PC\\Documents\\Git\\microservicios\\nur-tricenter-api-logistics-and-deliveries\\src\\LogisticsAndDeliveries\\LogisticsAndDeliveries.Application\\LogisticsAndDeliveries.Application.csproj": {
+              "projectPath": "C:\\Users\\PC\\Documents\\Git\\microservicios\\nur-tricenter-api-logistics-and-deliveries\\src\\LogisticsAndDeliveries\\LogisticsAndDeliveries.Application\\LogisticsAndDeliveries.Application.csproj"
             },
-            "C:\\Users\\PC\\Documents\\Git\\microservicios\\ms2024-m2-tf-juanmmc\\src\\LogisticsAndDeliveries\\LogisticsAndDeliveries.Domain\\LogisticsAndDeliveries.Domain.csproj": {
-              "projectPath": "C:\\Users\\PC\\Documents\\Git\\microservicios\\ms2024-m2-tf-juanmmc\\src\\LogisticsAndDeliveries\\LogisticsAndDeliveries.Domain\\LogisticsAndDeliveries.Domain.csproj"
+            "C:\\Users\\PC\\Documents\\Git\\microservicios\\nur-tricenter-api-logistics-and-deliveries\\src\\LogisticsAndDeliveries\\LogisticsAndDeliveries.Domain\\LogisticsAndDeliveries.Domain.csproj": {
+              "projectPath": "C:\\Users\\PC\\Documents\\Git\\microservicios\\nur-tricenter-api-logistics-and-deliveries\\src\\LogisticsAndDeliveries\\LogisticsAndDeliveries.Domain\\LogisticsAndDeliveries.Domain.csproj"
             }
           }
         }

@@ -10,12 +10,13 @@ namespace LogisticsAndDeliveries.Infrastructure.Messaging
         public string Password { get; set; } = "rabbit_mq";
         public string VirtualHost { get; set; } = "/";
         public string ExchangeName { get; set; } = "outbox.events";
-        public string InputQueueName { get; set; } = "produccion.paquete-despacho-creado ";
+        public string InputQueueName { get; set; } = "produccion.paquete-despacho-creado";
         public string InputRoutingKey { get; set; } = "produccion.paquete-despacho-creado";
         public string OutputRoutingKey { get; set; } = "logistica.paquete.estado-actualizado";
         public bool DeclareTopology { get; set; } = false;
         public int ReconnectDelaySeconds { get; set; } = 10;
         public ushort PrefetchCount { get; set; } = 10;
+        public DriverSelectionStrategy DriverSelectionStrategy { get; set; } = DriverSelectionStrategy.NearestToDelivery;
         public int OutboxBatchSize { get; set; } = 50;
         public int OutboxPublishIntervalSeconds { get; set; } = 5;
     }

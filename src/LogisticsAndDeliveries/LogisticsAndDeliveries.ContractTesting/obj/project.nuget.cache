@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "Bi6tUD2UBHg=",
+  "dgSpecHash": "IJ4624Rmg34=",
   "success": true,
-  "projectFilePath": "C:\\Users\\PC\\Documents\\Git\\microservicios\\ms2024-m2-tf-juanmmc\\src\\LogisticsAndDeliveries\\LogisticsAndDeliveries.ContractTesting\\LogisticsAndDeliveries.ContractTesting.csproj",
+  "projectFilePath": "C:\\Users\\PC\\Documents\\Git\\microservicios\\nur-tricenter-api-logistics-and-deliveries\\src\\LogisticsAndDeliveries\\LogisticsAndDeliveries.ContractTesting\\LogisticsAndDeliveries.ContractTesting.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\PC\\.nuget\\packages\\coverlet.collector\\6.0.4\\coverlet.collector.6.0.4.nupkg.sha512",
     "C:\\Users\\PC\\.nuget\\packages\\fluentassertions\\8.8.0\\fluentassertions.8.8.0.nupkg.sha512",

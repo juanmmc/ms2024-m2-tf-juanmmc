@@ -8,5 +8,5 @@ using System.Threading.Tasks;
 
 namespace LogisticsAndDeliveries.Application.Drivers.CreateDriver
 {
-    public record CreateDriverCommand(Guid Id, string Name) : IRequest<Result<Guid>>;
+    public record CreateDriverCommand(string Name) : IRequest<Result<Guid>>;
 }

@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "CXTtBjEYbpg=",
+  "dgSpecHash": "CuMUUjyaF+8=",
   "success": true,
-  "projectFilePath": "C:\\Users\\PC\\Documents\\Git\\microservicios\\ms2024-m2-tf-juanmmc\\src\\LogisticsAndDeliveries\\LogisticsAndDeliveries.WebApi\\LogisticsAndDeliveries.WebApi.csproj",
+  "projectFilePath": "C:\\Users\\PC\\Documents\\Git\\microservicios\\nur-tricenter-api-logistics-and-deliveries\\src\\LogisticsAndDeliveries\\LogisticsAndDeliveries.WebApi\\LogisticsAndDeliveries.WebApi.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\PC\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
     "C:\\Users\\PC\\.nuget\\packages\\mediatr\\13.0.0\\mediatr.13.0.0.nupkg.sha512",

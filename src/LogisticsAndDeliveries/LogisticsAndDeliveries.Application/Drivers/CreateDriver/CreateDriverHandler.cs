@@ -10,16 +10,18 @@ namespace LogisticsAndDeliveries.Application.Drivers.CreateDriver
         private readonly IDriverRepository _driverRepository;
         private readonly IUnitOfWork _unitOfWork;
 
-        public CreateDriverHandler(IDriverRepository deliveryRepository, IUnitOfWork unitOfWork)
+        public CreateDriverHandler(IDriverRepository driverRepository, IUnitOfWork unitOfWork)
         {
-            _driverRepository = deliveryRepository;
+            _driverRepository = driverRepository;
             _unitOfWork = unitOfWork;
         }
 
         public async Task<Result<Guid>> Handle(CreateDriverCommand request, CancellationToken cancellationToken)
         {
+            Guid newDriverId = Guid.NewGuid();
+            
             // Crear el agregado de dominio
-            var driver = new Driver(request.Id, request.Name);
+            var driver = new Driver(newDriverId, request.Name);
 
             // Persistir el agregado
             await _driverRepository.AddAsync(driver);

@@ -1,7 +1,12 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Text.Json;
+using LogisticsAndDeliveries.Application.Drivers.Dto;
 using LogisticsAndDeliveries.Application.Drivers.GetDrivers;
 using LogisticsAndDeliveries.Application.Packages.CreatePackage;
+using LogisticsAndDeliveries.Application.Packages.GetDriverDeliveryLoads;
 using LogisticsAndDeliveries.Core.Results;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
@@ -114,7 +119,8 @@ namespace LogisticsAndDeliveries.Infrastructure.Messaging.Consumers
             try
             {
                 var raw = Encoding.UTF8.GetString(eventArgs.Body.ToArray());
-                var payload = JsonSerializer.Deserialize<PackageDispatchCreatedPayload>(raw, PayloadJsonOptions);
+                // var payload = JsonSerializer.Deserialize<PackageDispatchCreatedPayload>(raw, PayloadJsonOptions);
+                var payload = ExtractPayload(raw);
 
                 if (payload is null)
                 {
@@ -146,18 +152,21 @@ namespace LogisticsAndDeliveries.Infrastructure.Messaging.Consumers
                     return;
                 }
 
-                var selectedDriver = driversResult.Value
-                    .Where(driver => driver.Latitude.HasValue && driver.Longitude.HasValue)
-                    .OrderBy(driver => GetDistanceInKm(
-                        payload.DeliveryLatitude,
-                        payload.DeliveryLongitude,
-                        driver.Latitude!.Value,
-                        driver.Longitude!.Value))
-                    .ThenBy(driver => driver.Name)
-                    .FirstOrDefault()
-                    ?? driversResult.Value
-                        .OrderBy(driver => driver.Name)
-                        .First();
+                var selectedDriver = await SelectDriverAsync(
+                    driversResult.Value,
+                    payload,
+                    mediator,
+                    cancellationToken);
+
+                if (selectedDriver is null)
+                {
+                    _logger.LogError(
+                        "No fue posible seleccionar un driver para paquete {PackageId} usando la estrategia {Strategy}.",
+                        payload.Id,
+                        _options.DriverSelectionStrategy);
+                    _channel.BasicNack(eventArgs.DeliveryTag, false, requeue: true);
+                    return;
+                }
 
                 var command = new CreatePackageCommand
                 {
@@ -232,6 +241,75 @@ namespace LogisticsAndDeliveries.Infrastructure.Messaging.Consumers
             }
         }
 
+        private async Task<DriverDto?> SelectDriverAsync(
+            ICollection<DriverDto> drivers,
+            PackageDispatchCreatedPayload payload,
+            IMediator mediator,
+            CancellationToken cancellationToken)
+        {
+            return _options.DriverSelectionStrategy switch
+            {
+                DriverSelectionStrategy.LeastPackagesOnDate => await SelectDriverWithLeastPackagesAsync(
+                    drivers,
+                    payload.DeliveryDate,
+                    mediator,
+                    cancellationToken) ?? SelectDriverByDistance(drivers, payload),
+                _ => SelectDriverByDistance(drivers, payload)
+            };
+        }
+
+        private async Task<DriverDto?> SelectDriverWithLeastPackagesAsync(
+            ICollection<DriverDto> drivers,
+            DateOnly deliveryDate,
+            IMediator mediator,
+            CancellationToken cancellationToken)
+        {
+            var driverLoadsResult = await mediator.Send(new GetDriverDeliveryLoadsQuery(deliveryDate), cancellationToken);
+
+            if (driverLoadsResult.IsFailure)
+            {
+                _logger.LogWarning(
+                    "No fue posible obtener la carga de paquetes para la fecha {DeliveryDate}. Se usará la estrategia por proximidad. Codigo: {Code} - {Message}",
+                    deliveryDate,
+                    driverLoadsResult.Error.Code,
+                    driverLoadsResult.Error.Description);
+
+                return null;
+            }
+
+            var loadLookup = driverLoadsResult.Value.ToDictionary(load => load.DriverId, load => load.PackagesCount);
+
+            return drivers
+                .Select(driver => new
+                {
+                    Driver = driver,
+                    Packages = loadLookup.TryGetValue(driver.Id, out var count) ? count : 0
+                })
+                .OrderBy(entry => entry.Packages)
+                .ThenBy(entry => entry.Driver.Name)
+                .ThenBy(entry => entry.Driver.Id)
+                .Select(entry => entry.Driver)
+                .FirstOrDefault();
+        }
+
+        private static DriverDto? SelectDriverByDistance(
+            ICollection<DriverDto> drivers,
+            PackageDispatchCreatedPayload payload)
+        {
+            return drivers
+                .Where(driver => driver.Latitude.HasValue && driver.Longitude.HasValue)
+                .OrderBy(driver => GetDistanceInKm(
+                    payload.DeliveryLatitude,
+                    payload.DeliveryLongitude,
+                    driver.Latitude!.Value,
+                    driver.Longitude!.Value))
+                .ThenBy(driver => driver.Name)
+                .FirstOrDefault()
+                ?? drivers
+                    .OrderBy(driver => driver.Name)
+                    .FirstOrDefault();
+        }
+
         private sealed class PackageDispatchCreatedPayload
         {
             public Guid Id { get; set; }
@@ -267,6 +345,30 @@ namespace LogisticsAndDeliveries.Infrastructure.Messaging.Consumers
         private static bool IsNonRetryableError(ErrorType errorType)
         {
             return errorType is ErrorType.Validation or ErrorType.NotFound or ErrorType.Conflict;
+        }
+
+        private static PackageDispatchCreatedPayload? ExtractPayload(string raw)
+        {
+            using var document = JsonDocument.Parse(raw);
+
+            if (document.RootElement.ValueKind != JsonValueKind.Object)
+            {
+                return null;
+            }
+
+            foreach (var property in document.RootElement.EnumerateObject())
+            {
+                if (!string.Equals(property.Name, "payload", StringComparison.OrdinalIgnoreCase))
+                {
+                    continue;
+                }
+
+                return property.Value.ValueKind == JsonValueKind.Object
+                    ? JsonSerializer.Deserialize<PackageDispatchCreatedPayload>(property.Value.GetRawText(), PayloadJsonOptions)
+                    : null;
+            }
+
+            return JsonSerializer.Deserialize<PackageDispatchCreatedPayload>(document.RootElement.GetRawText(), PayloadJsonOptions);
         }
 
         private static bool IsValidPayload(PackageDispatchCreatedPayload payload, out string validationMessage)
