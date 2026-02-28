@@ -23,7 +23,7 @@ public class CreateDriverHandlerTest
     public async Task Handle_ValidCommand_CreatesDriverSuccessfully()
     {
         // Arrange
-        var command = new CreateDriverCommand(Guid.NewGuid(), "Carlos Mendoza");
+        var command = new CreateDriverCommand("Carlos Mendoza");
 
         _driverRepositoryMock
             .Setup(x => x.AddAsync(It.IsAny<Driver>()))
@@ -38,7 +38,6 @@ public class CreateDriverHandlerTest
 
         // Assert
         Assert.True(result.IsSuccess);
-        Assert.Equal(command.Id, result.Value);
         _driverRepositoryMock.Verify(x => x.AddAsync(It.IsAny<Driver>()), Times.Once);
         _unitOfWorkMock.Verify(x => x.CommitAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
@@ -47,7 +46,7 @@ public class CreateDriverHandlerTest
     public async Task Handle_EmptyName_ThrowsDomainException()
     {
         // Arrange
-        var command = new CreateDriverCommand(Guid.NewGuid(), "");
+        var command = new CreateDriverCommand("");
 
         // Act & Assert
         await Assert.ThrowsAsync<DomainException>(async () =>
@@ -63,7 +62,7 @@ public class CreateDriverHandlerTest
     public async Task Handle_NullName_ThrowsDomainException()
     {
         // Arrange
-        var command = new CreateDriverCommand(Guid.NewGuid(), null!);
+        var command = new CreateDriverCommand(null!);
 
         // Act & Assert
         await Assert.ThrowsAsync<DomainException>(async () =>
@@ -79,7 +78,7 @@ public class CreateDriverHandlerTest
     public async Task Handle_WhitespaceName_ThrowsDomainException()
     {
         // Arrange
-        var command = new CreateDriverCommand(Guid.NewGuid(), "   ");
+        var command = new CreateDriverCommand("   ");
 
         // Act & Assert
         await Assert.ThrowsAsync<DomainException>(async () =>

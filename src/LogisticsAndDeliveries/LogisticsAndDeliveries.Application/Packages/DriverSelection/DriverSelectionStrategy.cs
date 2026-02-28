@@ -1,4 +1,4 @@
-namespace LogisticsAndDeliveries.Infrastructure.Messaging
+namespace LogisticsAndDeliveries.Application.Packages.DriverSelection
 {
     public enum DriverSelectionStrategy
     {

@@ -1,3 +1,5 @@
+using LogisticsAndDeliveries.Application.Packages.DriverSelection;
+
 namespace LogisticsAndDeliveries.Infrastructure.Messaging
 {
     public class RabbitMqOptions

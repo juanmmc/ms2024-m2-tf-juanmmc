@@ -1,4 +1,5 @@
 ﻿using LogisticsAndDeliveries.Domain;
+using LogisticsAndDeliveries.Application.Packages.DriverSelection;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -16,6 +17,7 @@ namespace LogisticsAndDeliveries.Application
             // Registrar servicios de la capa de aplicación
             services.AddDomain();
             services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
+            services.AddScoped<IDriverSelectionService, DriverSelectionService>();
             return services;
         }
     }

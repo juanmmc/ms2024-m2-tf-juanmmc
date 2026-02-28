@@ -6,7 +6,7 @@ using System.Text.Json;
 using LogisticsAndDeliveries.Application.Drivers.Dto;
 using LogisticsAndDeliveries.Application.Drivers.GetDrivers;
 using LogisticsAndDeliveries.Application.Packages.CreatePackage;
-using LogisticsAndDeliveries.Application.Packages.GetDriverDeliveryLoads;
+using LogisticsAndDeliveries.Application.Packages.DriverSelection;
 using LogisticsAndDeliveries.Core.Results;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
@@ -28,6 +28,7 @@ namespace LogisticsAndDeliveries.Infrastructure.Messaging.Consumers
         private readonly IServiceScopeFactory _scopeFactory;
         private readonly ILogger<PackageDispatchCreatedConsumer> _logger;
         private readonly RabbitMqOptions _options;
+        private readonly IDriverSelectionService _driverSelectionService;
 
         private IConnection? _connection;
         private IModel? _channel;
@@ -35,11 +36,13 @@ namespace LogisticsAndDeliveries.Infrastructure.Messaging.Consumers
         public PackageDispatchCreatedConsumer(
             IServiceScopeFactory scopeFactory,
             IOptions<RabbitMqOptions> options,
+            IDriverSelectionService driverSelectionService,
             ILogger<PackageDispatchCreatedConsumer> logger)
         {
             _scopeFactory = scopeFactory;
             _logger = logger;
             _options = options.Value;
+            _driverSelectionService = driverSelectionService;
         }
 
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
@@ -152,10 +155,13 @@ namespace LogisticsAndDeliveries.Infrastructure.Messaging.Consumers
                     return;
                 }
 
-                var selectedDriver = await SelectDriverAsync(
+                var selectedDriver = await _driverSelectionService.SelectAsync(
                     driversResult.Value,
-                    payload,
-                    mediator,
+                    new DriverSelectionCriteria(
+                        payload.DeliveryDate,
+                        payload.DeliveryLatitude,
+                        payload.DeliveryLongitude,
+                        _options.DriverSelectionStrategy),
                     cancellationToken);
 
                 if (selectedDriver is null)
@@ -241,75 +247,6 @@ namespace LogisticsAndDeliveries.Infrastructure.Messaging.Consumers
             }
         }
 
-        private async Task<DriverDto?> SelectDriverAsync(
-            ICollection<DriverDto> drivers,
-            PackageDispatchCreatedPayload payload,
-            IMediator mediator,
-            CancellationToken cancellationToken)
-        {
-            return _options.DriverSelectionStrategy switch
-            {
-                DriverSelectionStrategy.LeastPackagesOnDate => await SelectDriverWithLeastPackagesAsync(
-                    drivers,
-                    payload.DeliveryDate,
-                    mediator,
-                    cancellationToken) ?? SelectDriverByDistance(drivers, payload),
-                _ => SelectDriverByDistance(drivers, payload)
-            };
-        }
-
-        private async Task<DriverDto?> SelectDriverWithLeastPackagesAsync(
-            ICollection<DriverDto> drivers,
-            DateOnly deliveryDate,
-            IMediator mediator,
-            CancellationToken cancellationToken)
-        {
-            var driverLoadsResult = await mediator.Send(new GetDriverDeliveryLoadsQuery(deliveryDate), cancellationToken);
-
-            if (driverLoadsResult.IsFailure)
-            {
-                _logger.LogWarning(
-                    "No fue posible obtener la carga de paquetes para la fecha {DeliveryDate}. Se usará la estrategia por proximidad. Codigo: {Code} - {Message}",
-                    deliveryDate,
-                    driverLoadsResult.Error.Code,
-                    driverLoadsResult.Error.Description);
-
-                return null;
-            }
-
-            var loadLookup = driverLoadsResult.Value.ToDictionary(load => load.DriverId, load => load.PackagesCount);
-
-            return drivers
-                .Select(driver => new
-                {
-                    Driver = driver,
-                    Packages = loadLookup.TryGetValue(driver.Id, out var count) ? count : 0
-                })
-                .OrderBy(entry => entry.Packages)
-                .ThenBy(entry => entry.Driver.Name)
-                .ThenBy(entry => entry.Driver.Id)
-                .Select(entry => entry.Driver)
-                .FirstOrDefault();
-        }
-
-        private static DriverDto? SelectDriverByDistance(
-            ICollection<DriverDto> drivers,
-            PackageDispatchCreatedPayload payload)
-        {
-            return drivers
-                .Where(driver => driver.Latitude.HasValue && driver.Longitude.HasValue)
-                .OrderBy(driver => GetDistanceInKm(
-                    payload.DeliveryLatitude,
-                    payload.DeliveryLongitude,
-                    driver.Latitude!.Value,
-                    driver.Longitude!.Value))
-                .ThenBy(driver => driver.Name)
-                .FirstOrDefault()
-                ?? drivers
-                    .OrderBy(driver => driver.Name)
-                    .FirstOrDefault();
-        }
-
         private sealed class PackageDispatchCreatedPayload
         {
             public Guid Id { get; set; }
@@ -320,26 +257,6 @@ namespace LogisticsAndDeliveries.Infrastructure.Messaging.Consumers
             public double DeliveryLatitude { get; set; }
             public double DeliveryLongitude { get; set; }
             public DateOnly DeliveryDate { get; set; }
-        }
-
-        private static double GetDistanceInKm(double originLatitude, double originLongitude, double targetLatitude, double targetLongitude)
-        {
-            const double earthRadiusKm = 6371;
-
-            var deltaLatitude = ToRadians(targetLatitude - originLatitude);
-            var deltaLongitude = ToRadians(targetLongitude - originLongitude);
-
-            var a = Math.Sin(deltaLatitude / 2) * Math.Sin(deltaLatitude / 2) +
-                    Math.Cos(ToRadians(originLatitude)) * Math.Cos(ToRadians(targetLatitude)) *
-                    Math.Sin(deltaLongitude / 2) * Math.Sin(deltaLongitude / 2);
-
-            var c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
-            return earthRadiusKm * c;
-        }
-
-        private static double ToRadians(double value)
-        {
-            return value * Math.PI / 180;
         }
 
         private static bool IsNonRetryableError(ErrorType errorType)
