@@ -2,9 +2,9 @@
 
 ## Resumen de los Cambios Realizados
 
-### ✅ Problema 1: Variables de Entorno para ConnectionString
+### ✅ Variable de Entorno para ConnectionString
 
-**Solución:** En ASP.NET Core, puedes sobrescribir cualquier configuración del `appsettings.json` usando variables de entorno. La sintaxis es:
+ASP.NET Core, sobrescribe cualquier configuración del `appsettings.json` usando variables de entorno. La sintaxis es:
 ```
 ConnectionStrings__NombreDeConexion
 ```
@@ -17,9 +17,9 @@ environment:
   - ConnectionStrings__LogisticsAndDeliveriesDatabase=Server=db;Port=5432;Database=api_db;Username=api_user;Password=ApiPass123;Include Error Detail=true
 ```
 
-### ✅ Problema 2: Ejecutar Migraciones Automáticamente
+### ✅ Ejecutar Migraciones Automáticamente
 
-**Solución:** Modificamos el código para que las migraciones se apliquen automáticamente cuando inicia el contenedor.
+Modificamos el código para que las migraciones se apliquen automáticamente cuando inicia el contenedor.
 
 **Cambios realizados:**
 
@@ -180,8 +180,8 @@ public record CreatePackageCommand : IRequest<Result<Guid>>
 - El `appsettings.json` mantiene la configuración de desarrollo local
 - Las variables de entorno en Docker **sobrescriben** las del `appsettings.json`
 - La API acepta JSON en **camelCase** (ej: `patientName`, no `PatientName`)
-- Si cambias el esquema de la base de datos, necesitas:
-  1. Crear una nueva migración en tu máquina local
+- Si se cambia el esquema de la base de datos, se necesita:
+  1. Crear una nueva migración en la máquina local
   2. Reconstruir la imagen Docker
   3. Reiniciar los contenedores
 
@@ -206,21 +206,6 @@ docker-compose logs api
 # Eliminar todo y empezar de nuevo
 docker-compose down -v
 docker-compose up -d
-```
-
-### Error de validación "The request field is required":
-Este error ocurría cuando los `record` usaban constructor posicional en lugar de propiedades `init`. Ya fue corregido en el código.
-
-**Causa raíz:** Los `record` con constructores posicionales pueden tener problemas con la deserialización JSON en ASP.NET Core.
-
-**Solución aplicada:** Convertir `CreatePackageCommand` a usar propiedades `init`:
-```csharp
-public record CreatePackageCommand : IRequest<Result<Guid>>
-{
-    public Guid Id { get; init; }
-    public string Number { get; init; } = string.Empty;
-    // ... otras propiedades
-}
 ```
 
 ### Ejemplo de prueba exitosa:

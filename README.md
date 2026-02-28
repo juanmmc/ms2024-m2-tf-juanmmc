@@ -13,7 +13,7 @@ Microservicio para gestionar operaciones de reparto (entregas) de paquetes alime
 - Obtener repartidor.
 
 ### Gestión de paquetes (Package)
-- Crear paquete con información del paciente, dirección de entrega y repartidor asignado.
+- Crear paquete con información del paciente, dirección de entrega y asignación de driver.
 - Cambiar estado: marcar en tránsito (si tiene orden asignado), entregado (con evidencia), fallido, cancelar.
 - Registrar incidentes de entrega (solo si el paquete está en estado Failed).
 - Registrar orden para planificación de entrega.
