@@ -28,7 +28,6 @@ namespace LogisticsAndDeliveries.Infrastructure.Messaging.Consumers
         private readonly IServiceScopeFactory _scopeFactory;
         private readonly ILogger<PackageDispatchCreatedConsumer> _logger;
         private readonly RabbitMqOptions _options;
-        private readonly IDriverSelectionService _driverSelectionService;
 
         private IConnection? _connection;
         private IModel? _channel;
@@ -36,13 +35,11 @@ namespace LogisticsAndDeliveries.Infrastructure.Messaging.Consumers
         public PackageDispatchCreatedConsumer(
             IServiceScopeFactory scopeFactory,
             IOptions<RabbitMqOptions> options,
-            IDriverSelectionService driverSelectionService,
             ILogger<PackageDispatchCreatedConsumer> logger)
         {
             _scopeFactory = scopeFactory;
             _logger = logger;
             _options = options.Value;
-            _driverSelectionService = driverSelectionService;
         }
 
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
@@ -146,6 +143,7 @@ namespace LogisticsAndDeliveries.Infrastructure.Messaging.Consumers
 
                 using var scope = _scopeFactory.CreateScope();
                 var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+                var driverSelectionService = scope.ServiceProvider.GetRequiredService<IDriverSelectionService>();
 
                 var driversResult = await mediator.Send(new GetDriversQuery(), cancellationToken);
                 if (driversResult.IsFailure || driversResult.Value.Count == 0)
@@ -155,7 +153,7 @@ namespace LogisticsAndDeliveries.Infrastructure.Messaging.Consumers
                     return;
                 }
 
-                var selectedDriver = await _driverSelectionService.SelectAsync(
+                var selectedDriver = await driverSelectionService.SelectAsync(
                     driversResult.Value,
                     new DriverSelectionCriteria(
                         payload.DeliveryDate,

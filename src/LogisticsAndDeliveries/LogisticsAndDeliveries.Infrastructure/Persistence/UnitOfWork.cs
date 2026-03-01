@@ -4,17 +4,20 @@ using LogisticsAndDeliveries.Infrastructure.Persistence.DomainModel;
 using LogisticsAndDeliveries.Infrastructure.Outbox;
 using System.Text.Json;
 using System.Collections.Immutable;
+using MediatR;
 
 namespace LogisticsAndDeliveries.Infrastructure.Persistence
 {
     internal class UnitOfWork : IUnitOfWork
     {
         private readonly DomainDbContext _dbContext;
+        private readonly IMediator _mediator;
         private const string PackageDispatchStatusUpdatedEventName = "logistica.paquete.estado-actualizado";
 
-        public UnitOfWork(DomainDbContext dbContext)
+        public UnitOfWork(DomainDbContext dbContext, IMediator mediator)
         {
             _dbContext = dbContext;
+            _mediator = mediator;
         }
 
         public async Task CommitAsync(CancellationToken cancellationToken = default)
@@ -32,6 +35,11 @@ namespace LogisticsAndDeliveries.Infrastructure.Persistence
                 })
                 .SelectMany(domainEvents => domainEvents)
                 .ToList();
+            
+            /*foreach (var domainEvent in domainEvents)
+            {
+                await _mediator.Publish(domainEvent, cancellationToken);
+            }*/
 
             var outboxMessages = domainEvents
                 .Select(MapToOutboxMessage)
@@ -43,7 +51,6 @@ namespace LogisticsAndDeliveries.Infrastructure.Persistence
             {
                 await _dbContext.OutboxMessage.AddRangeAsync(outboxMessages, cancellationToken);
             }
-
 
             await _dbContext.SaveChangesAsync(cancellationToken);
         }
@@ -67,7 +74,7 @@ namespace LogisticsAndDeliveries.Infrastructure.Persistence
 
                 return new OutboxMessage
                 {
-                    Id = Guid.NewGuid(),
+                    Id = domainEvent.Id,
                     EventName = PackageDispatchStatusUpdatedEventName,
                     Type = domainEvent.GetType().FullName ?? nameof(PackageDeliveryStatusChangedDomainEvent),
                     Content = JsonSerializer.Serialize(payload),
